@@ -1,0 +1,115 @@
+.parcours {
+  padding: 100px 0;
+  background: var(--bg-light);
+}
+
+.parcours h2 {
+  text-align: center;
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+.parcours h2 span {
+  color: var(--primary-blue);
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--text-light);
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.parcours-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2.5rem;
+}
+
+.niveau-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.niveau-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.niveau-badge {
+  background: var(--primary-blue);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.niveau-card h3 {
+  color: var(--dark-blue);
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.niveau-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.niveau-content ul {
+  list-style: none;
+  margin-bottom: 2rem;
+  flex: 1;
+}
+
+.niveau-content li {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 1rem;
+  color: var(--text-dark);
+}
+
+.niveau-content li:last-child {
+  border-bottom: none;
+}
+
+.btn-niveau {
+  width: 100%;
+  padding: 15px;
+  background: var(--success-green);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: auto;
+}
+
+.btn-niveau:hover:not(:disabled) {
+  background: #059669;
+  transform: translateY(-2px);
+}
+
+.btn-niveau:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .parcours-grid {
+    grid-template-columns: 1fr;
+  }
+}

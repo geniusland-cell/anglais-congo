@@ -1,0 +1,111 @@
+.exercices {
+  padding: 80px 0;
+  background: var(--bg-light);
+  border-top: 1px solid #e2e8f0;
+}
+
+.exercices-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.exercices-header h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+}
+
+.exercices-preview {
+  display: flex;
+  justify-content: center;
+}
+
+.preview-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  max-width: 400px;
+  width: 100%;
+}
+
+.preview-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.preview-card h3 {
+  color: var(--primary-blue);
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+}
+
+.preview-card p {
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.preview-features {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.preview-features li {
+  padding: 0.3rem 0;
+  color: var(--text-dark);
+}
+
+.btn-exercice-demo {
+  padding: 1rem 2rem;
+  background: var(--congo-green);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.btn-exercice-demo:hover {
+  background: var(--primary-blue);
+  transform: translateY(-2px);
+}
+
+.exercice-actif {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.btn-retour {
+  background: none;
+  border: none;
+  color: var(--primary-blue);
+  cursor: pointer;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+  transition: color 0.3s ease;
+}
+
+.btn-retour:hover {
+  color: var(--dark-blue);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .exercices {
+    padding: 60px 0;
+  }
+
+  .preview-card {
+    margin: 0 1rem;
+    padding: 1.5rem;
+  }
+}

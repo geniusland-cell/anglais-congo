@@ -1,0 +1,129 @@
+.profils {
+  padding: 100px 0;
+  background: white;
+}
+
+.profils h2 {
+  text-align: center;
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+.accent-congo {
+  color: var(--congo-green);
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--text-light);
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.profils-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.profil-card {
+  text-align: center;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.profil-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--congo-green);
+  box-shadow: 0 10px 30px rgba(0, 149, 67, 0.1);
+}
+
+.profil-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profil-card h3 {
+  color: var(--dark-blue);
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.profil-card p {
+  color: var(--text-light);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.badge-exclusif {
+  background: linear-gradient(45deg, var(--congo-green), var(--congo-yellow));
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.badge-coming {
+  background: var(--text-light);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.btn-profil {
+  padding: 12px 24px;
+  background: var(--congo-green);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.btn-profil:hover:not(:disabled) {
+  background: var(--primary-blue);
+  transform: translateY(-2px);
+}
+
+.btn-profil:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.coming-soon {
+  opacity: 0.7;
+}
+
+.coming-soon:hover {
+  transform: none;
+  border-color: transparent;
+}
+
+@media (max-width: 768px) {
+  .profils-grid {
+    grid-template-columns: 1fr;
+  }
+}

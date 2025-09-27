@@ -1,0 +1,59 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #ffffff;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Variables CSS */
+:root {
+  --primary-blue: #2c5aa0;
+  --dark-blue: #1e3a8a;
+  --accent-yellow: #fbbf24;
+  --success-green: #10b981;
+  --text-dark: #1f2937;
+  --text-light: #6b7280;
+  --bg-light: #f8fafc;
+}
+
+/* Couleurs drapeau Congo */
+:root {
+  --congo-green: #009543;
+  --congo-yellow: #fbde4a;
+  --congo-red: #dc241f;
+}
+
+/* Accents Congo */
+.accent-congo {
+  color: var(--congo-green);
+  font-weight: bold;
+}
+
+.border-congo {
+  border: 2px solid var(--congo-green);
+  border-radius: 8px;
+}
+
+/* Badge exclusif */
+.badge-exclusif {
+  background: linear-gradient(45deg, var(--congo-green), var(--congo-yellow));
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
