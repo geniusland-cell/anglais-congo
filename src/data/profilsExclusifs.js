@@ -177,18 +177,115 @@ export const profilsExclusifs = {
   },
 };
 
-// Fonction audio améliorée
-export const parlerAvecStyle = (texte, langue = "en") => {
+// Fonction audio améliorée avec voix plus humaine et naturelle
+export const parlerAvecStyle = (texte, langue = "fr") => {
   if ("speechSynthesis" in window) {
     const synth = window.speechSynthesis;
+
+    // Arrêter toute parole en cours
     synth.cancel();
 
-    const utterance = new SpeechSynthesisUtterance(texte);
-    utterance.lang = langue === "fr" ? "fr-FR" : "en-US";
-    utterance.rate = 0.8; // Plus lent pour l'apprentissage
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
+    // Vérifier si déjà en train de parler
+    if (synth.speaking) {
+      console.log("Déjà en train de parler, annulation");
+      return;
+    }
 
-    synth.speak(utterance);
+    const utterance = new SpeechSynthesisUtterance(texte);
+
+    // Paramètres voix naturelle et humaine
+    utterance.lang = langue === "fr" ? "fr-FR" : "en-US";
+    utterance.rate = 0.82; // Rythme naturel de conversation
+    utterance.pitch = 1.05; // Légèrement plus chaleureux
+    utterance.volume = 0.92; // Volume confortable
+
+    // Chercher les meilleures voix disponibles
+    const voices = synth.getVoices();
+    const preferredVoices = {
+      "fr-FR": ["Google français", "Natural", "Julie", "Virginie", "Audrey"],
+      "en-US": [
+        "Google US English",
+        "Samantha",
+        "Alex",
+        "Karen",
+        "Microsoft David",
+      ],
+    };
+
+    const targetLang = langue === "fr" ? "fr-FR" : "en-US";
+    let bestVoice = null;
+
+    // Chercher la voix idéale par ordre de préférence
+    for (const voiceName of preferredVoices[targetLang]) {
+      const voice = voices.find(
+        (v) => v.lang === targetLang && v.name.includes(voiceName)
+      );
+      if (voice) {
+        bestVoice = voice;
+        console.log("Voix sélectionnée:", voice.name);
+        break;
+      }
+    }
+
+    // Fallback : première voix disponible dans la langue
+    if (!bestVoice) {
+      bestVoice = voices.find((v) => v.lang === targetLang);
+      if (bestVoice) {
+        console.log("Voix fallback:", bestVoice.name);
+      }
+    }
+
+    if (bestVoice) {
+      utterance.voice = bestVoice;
+    }
+
+    // Gestion avancée des événements
+    utterance.onstart = () => {
+      console.log("Lecture audio démarrée");
+      // Feedback visuel
+      const buttons = document.querySelectorAll(".btn-audio");
+      buttons.forEach((btn) => {
+        btn.classList.add("playing");
+        btn.disabled = true;
+      });
+    };
+
+    utterance.onend = () => {
+      console.log("Lecture audio terminée");
+      setTimeout(() => {
+        const buttons = document.querySelectorAll(".btn-audio");
+        buttons.forEach((btn) => {
+          btn.classList.remove("playing");
+          btn.disabled = false;
+        });
+      }, 200);
+    };
+
+    utterance.onerror = (event) => {
+      console.error("Erreur audio:", event);
+      const buttons = document.querySelectorAll(".btn-audio");
+      buttons.forEach((btn) => {
+        btn.classList.remove("playing");
+        btn.disabled = false;
+      });
+
+      // Fallback utilisateur
+      alert(`🔊 ${langue.toUpperCase()}: ${texte}`);
+    };
+
+    // Délai pour la stabilité
+    setTimeout(() => {
+      try {
+        synth.speak(utterance);
+      } catch (error) {
+        console.error("Erreur critique:", error);
+        alert(`🎧 ${texte}`);
+      }
+    }, 120);
+  } else {
+    // Fallback pour navigateurs sans synthèse vocale
+    const msg = `🔊 ${langue.toUpperCase()}: ${texte}`;
+    console.log(msg);
+    alert(msg);
   }
 };

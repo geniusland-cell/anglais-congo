@@ -32,21 +32,108 @@ export const niveau1Data = {
   ],
 };
 
-// Fonction de synthèse vocale
-export const parlerPhrase = (texte, langue = "en") => {
+// Fonction de synthèse vocale améliorée - Voix plus humaine
+export const parlerPhrase = (texte, langue = "fr") => {
   if ("speechSynthesis" in window) {
     const synth = window.speechSynthesis;
+
     // Arrêter toute parole en cours
     synth.cancel();
 
-    const utterance = new SpeechSynthesisUtterance(texte);
-    utterance.lang = langue === "fr" ? "fr-FR" : "en-US";
-    utterance.rate = 0.9; // Vitesse légèrement réduite
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
+    // Attendre que la synthèse soit prête
+    if (synth.speaking) {
+      console.error("SpeechSynthesis is already speaking");
+      return;
+    }
 
-    synth.speak(utterance);
+    const utterance = new SpeechSynthesisUtterance(texte);
+
+    // Configuration pour un son plus naturel et humain
+    utterance.lang = langue === "fr" ? "fr-FR" : "en-US";
+    utterance.rate = 0.85; // Plus lent pour la clarté
+    utterance.pitch = 1.0; // Hauteur naturelle
+    utterance.volume = 0.95; // Volume optimal
+
+    // Sélectionner une voix plus naturelle si disponible
+    const voices = synth.getVoices();
+    let selectedVoice = null;
+
+    if (langue === "fr") {
+      // Priorité aux voix françaises naturelles
+      selectedVoice = voices.find(
+        (voice) =>
+          voice.lang === "fr-FR" &&
+          (voice.name.includes("Google") ||
+            voice.name.includes("Natural") ||
+            voice.name.includes("Julie"))
+      );
+    } else {
+      // Priorité aux voix anglaises naturelles
+      selectedVoice = voices.find(
+        (voice) =>
+          voice.lang === "en-US" &&
+          (voice.name.includes("Google") ||
+            voice.name.includes("Natural") ||
+            voice.name.includes("Samantha") ||
+            voice.name.includes("Alex"))
+      );
+    }
+
+    // Si aucune voix idéale, prendre la première disponible
+    if (!selectedVoice) {
+      selectedVoice = voices.find(
+        (voice) => voice.lang === (langue === "fr" ? "fr-FR" : "en-US")
+      );
+    }
+
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+      console.log("Voix utilisée:", selectedVoice.name);
+    }
+
+    // Gérer les événements pour un meilleur contrôle
+    utterance.onstart = () => {
+      console.log("Début de la synthèse vocale");
+      // Désactiver temporairement les boutons
+      document.querySelectorAll(".btn-audio").forEach((btn) => {
+        btn.style.opacity = "0.7";
+        btn.style.cursor = "not-allowed";
+      });
+    };
+
+    utterance.onend = () => {
+      console.log("Fin de la synthèse vocale");
+      // Réactiver les boutons
+      setTimeout(() => {
+        document.querySelectorAll(".btn-audio").forEach((btn) => {
+          btn.style.opacity = "1";
+          btn.style.cursor = "pointer";
+        });
+      }, 300);
+    };
+
+    utterance.onerror = (event) => {
+      console.error("Erreur synthèse vocale:", event);
+      // Réactiver les boutons en cas d'erreur
+      document.querySelectorAll(".btn-audio").forEach((btn) => {
+        btn.style.opacity = "1";
+        btn.style.cursor = "pointer";
+      });
+    };
+
+    // Petite pause avant de parler pour une meilleure stabilité
+    setTimeout(() => {
+      try {
+        synth.speak(utterance);
+      } catch (error) {
+        console.error("Erreur lors de la synthèse:", error);
+        // Fallback simple
+        alert(`Prononciation : ${texte}`);
+      }
+    }, 100);
   } else {
-    console.warn("Synthèse vocale non supportée");
+    console.warn("Synthèse vocale non supportée par ce navigateur");
+    // Fallback : afficher un message
+    alert(`🎧 ${langue.toUpperCase()} : ${texte}`);
   }
 };

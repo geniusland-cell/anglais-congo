@@ -239,3 +239,50 @@
     justify-content: center;
   }
 }
+
+/* Styles audio cohérents avec ModalProfil */
+.btn-audio {
+  padding: 0.5rem 1rem;
+  background: var(--success-green);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-audio:hover:not(:disabled) {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+.btn-audio:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn-audio.playing {
+  background: var(--primary-blue);
+  animation: audioPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes audioPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(44, 90, 160, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 6px rgba(44, 90, 160, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(44, 90, 160, 0);
+  }
+}
