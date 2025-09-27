@@ -1,11 +1,11 @@
 .parcours {
-  padding: 100px 0;
+  padding: 80px 0;
   background: var(--bg-light);
 }
 
 .parcours h2 {
   text-align: center;
-  font-size: 2.8rem;
+  font-size: 2.2rem;
   margin-bottom: 1rem;
   color: var(--text-dark);
   font-weight: 700;
@@ -17,7 +17,7 @@
 
 .section-subtitle {
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: var(--text-light);
   margin-bottom: 3rem;
   max-width: 600px;
@@ -28,14 +28,25 @@
 
 .parcours-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  padding: 0 1rem;
 }
 
 .niveau-card {
   display: flex;
   flex-direction: column;
   height: 100%;
+  background: white;
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.niveau-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
 .niveau-header {
@@ -46,9 +57,9 @@
 .niveau-badge {
   background: var(--primary-blue);
   color: white;
-  padding: 8px 20px;
-  border-radius: 25px;
-  font-size: 0.9rem;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
   font-weight: 600;
   display: inline-block;
   margin-bottom: 1rem;
@@ -56,7 +67,7 @@
 
 .niveau-card h3 {
   color: var(--dark-blue);
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 600;
   line-height: 1.3;
 }
@@ -74,9 +85,9 @@
 }
 
 .niveau-content li {
-  padding: 0.8rem 0;
+  padding: 0.6rem 0;
   border-bottom: 1px solid #f1f5f9;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--text-dark);
 }
 
@@ -86,12 +97,12 @@
 
 .btn-niveau {
   width: 100%;
-  padding: 15px;
+  padding: 12px;
   background: var(--success-green);
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -108,8 +119,69 @@
   cursor: not-allowed;
 }
 
+/* Responsive */
+@media (max-width: 1024px) {
+  .parcours-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
+  .parcours {
+    padding: 60px 0;
+  }
+
+  .parcours h2 {
+    font-size: 1.8rem;
+    padding: 0 1rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+    padding: 0 1rem;
+    margin-bottom: 2rem;
+  }
+
   .parcours-grid {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .niveau-card {
+    padding: 1.5rem 1rem;
+    margin: 0 0.5rem;
+  }
+
+  .niveau-card h3 {
+    font-size: 1.2rem;
+  }
+
+  .niveau-content li {
+    font-size: 0.9rem;
+  }
+
+  .btn-niveau {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .parcours h2 {
+    font-size: 1.6rem;
+  }
+
+  .section-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .niveau-card {
+    padding: 1.25rem 0.75rem;
+    margin: 0 0.25rem;
+  }
+
+  .niveau-card h3 {
+    font-size: 1.1rem;
   }
 }

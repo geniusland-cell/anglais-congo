@@ -1,4 +1,4 @@
-// Version 1.0 - Deployed on Vercel
+// 🚀 Auto-deploy test - $(date)
 import React from "react";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
