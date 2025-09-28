@@ -1,27 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import SelecteurLangue from "./SelecteurLangue";
 import "./Header.css";
 
 const Header = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToSection = (sectionId) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const [showSelecteurLangue, setShowSelecteurLangue] = useState(false);
 
   return (
-    <header className={`header ${isScrolled ? "scrolled" : ""}`}>
+    <header className="header">
       <nav className="nav container">
         <div className="logo">
           <h2>AnglaisCongo</h2>
@@ -29,52 +14,34 @@ const Header = () => {
 
         <ul className="nav-links">
           <li>
-            <a
-              href="#accueil"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("accueil");
-              }}
-            >
-              Accueil
-            </a>
+            <a href="#accueil">Accueil</a>
           </li>
           <li>
-            <a
-              href="#parcours"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("parcours");
-              }}
-            >
-              Parcours
-            </a>
+            <a href="#parcours">Parcours</a>
           </li>
           <li>
-            <a
-              href="#profils"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("profils");
-              }}
-            >
-              Profils
-            </a>
+            <a href="#profils">Profils</a>
           </li>
-
           <li>
-            <a
-              href="#exercices"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("exercices");
-              }}
+            <a href="#exercices">Exercices</a>
+          </li>
+          <li>
+            <button
+              className="btn-langue"
+              onClick={() => setShowSelecteurLangue(!showSelecteurLangue)}
             >
-              Exercices
-            </a>
+              🌐
+            </button>
           </li>
         </ul>
       </nav>
+
+      {/* Selecteur de langue qui apparaît au clic */}
+      {showSelecteurLangue && (
+        <div className="selecteur-container">
+          <SelecteurLangue />
+        </div>
+      )}
     </header>
   );
 };
