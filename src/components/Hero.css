@@ -1,78 +1,79 @@
-.header {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  z-index: 1000;
-  transition: all 0.3s ease;
-  border-bottom: 1px solid transparent;
-}
-
-.header.scrolled {
-  background: rgba(255, 255, 255, 0.98);
-  border-bottom: 1px solid #e2e8f0;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
-}
-
-.nav {
+.hero {
+  background: linear-gradient(
+    135deg,
+    var(--primary-blue) 0%,
+    var(--dark-blue) 100%
+  );
+  color: white;
+  padding: 160px 0 80px;
+  text-align: center;
+  min-height: 100vh;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 1rem 0;
 }
 
-.logo h2 {
-  color: var(--primary-blue);
-  font-size: 1.8rem;
+.hero-content h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
   font-weight: 700;
+  line-height: 1.2;
 }
 
-.nav-links {
+.hero-content h1 span {
+  color: var(--accent-yellow);
+  display: block;
+}
+
+.hero-content p {
+  font-size: 1.3rem;
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+.hero-buttons {
   display: flex;
-  list-style: none;
-  gap: 2rem;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: var(--text-dark);
-  font-weight: 500;
-  transition: color 0.3s ease;
-  position: relative;
-}
-
-.nav-links a:hover {
-  color: var(--primary-blue);
-}
-
-.nav-links a::after {
-  content: "";
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--primary-blue);
-  transition: width 0.3s ease;
-}
-
-.nav-links a:hover::after {
-  width: 100%;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 768px) {
-  .nav {
+  .hero {
+    padding: 140px 0 60px;
+    min-height: 80vh;
+  }
+
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-content p {
+    font-size: 1.1rem;
+    padding: 0 1rem;
+  }
+
+  .hero-buttons {
     flex-direction: column;
+    align-items: center;
     gap: 1rem;
-    padding: 1rem 0;
   }
 
-  .nav-links {
-    gap: 1.5rem;
+  .hero-buttons button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 2rem;
   }
 
-  .logo h2 {
-    font-size: 1.5rem;
+  .hero-content p {
+    font-size: 1rem;
   }
 }
