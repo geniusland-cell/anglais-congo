@@ -1,10 +1,7 @@
 import React from "react";
-import { useLangue } from "../hooks/useLangue";
 import "./Hero.css";
 
 const Hero = () => {
-  const { traduire } = useLangue();
-
   const scrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId);
     if (section) {
@@ -15,20 +12,25 @@ const Hero = () => {
   return (
     <section id="accueil" className="hero">
       <div className="hero-content container">
-        <h1>{traduire("titre").replace("VOTRE", "<span>VOTRE</span>")}</h1>
-        <p>{traduire("sousTitre")}</p>
+        <h1>
+          Parlez Anglais pour <span>VOTRE Quotidien</span>
+        </h1>
+        <p>
+          Que vous soyez parent, étudiant, commerçant ou professionnel, apprenez
+          l'anglais utile pour votre vie en République du Congo
+        </p>
         <div className="hero-buttons">
           <button
             className="btn-primary"
             onClick={() => scrollToSection("parcours")}
           >
-            {traduire("boutonPrimaire")}
+            Commencer à apprendre
           </button>
           <button
             className="btn-secondary"
             onClick={() => scrollToSection("profils")}
           >
-            {traduire("boutonSecondaire")}
+            Voir mon profil
           </button>
         </div>
       </div>
