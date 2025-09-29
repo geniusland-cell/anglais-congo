@@ -76,3 +76,21 @@
     font-size: 1.5rem;
   }
 }
+
+/* Ajouter à la fin */
+
+.auth-btn {
+  background: var(--success-green);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.auth-btn:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
