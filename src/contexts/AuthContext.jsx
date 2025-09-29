@@ -26,19 +26,15 @@ export const AuthProvider = ({ children }) => {
     try {
       const token = localStorage.getItem("anglaisCongo_token");
       if (token) {
-        // Vérifier avec l'API si le token est toujours valide
-        const response = await fetch("/.netlify/functions/auth-verify", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData);
-        } else {
-          localStorage.removeItem("anglaisCongo_token");
-        }
+        // Pour la phase test, on simule un utilisateur
+        // Plus tard, on fera une vraie vérification API
+        const simulatedUser = {
+          id: 1,
+          email: "test@example.com",
+          subscription_type: "gratuit",
+          created_at: new Date().toISOString(),
+        };
+        setUser(simulatedUser);
       }
     } catch (error) {
       console.error("Erreur vérification auth:", error);
@@ -47,51 +43,47 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Connexion
+  // Connexion (simulée pour les tests)
   const login = async (email, password) => {
     try {
-      const response = await fetch("/.netlify/functions/auth-login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      // Simulation d'un délai réseau
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("anglaisCongo_token", data.token);
-        setUser(data.user);
-        return { success: true, user: data.user };
-      } else {
-        const error = await response.json();
-        return { success: false, error: error.message };
-      }
+      // Pour les tests, on accepte n'importe quel email/mot de passe
+      const userData = {
+        id: Math.random().toString(36).substr(2, 9),
+        email: email,
+        subscription_type: "gratuit",
+        created_at: new Date().toISOString(),
+      };
+
+      localStorage.setItem("anglaisCongo_token", "test-token-" + userData.id);
+      setUser(userData);
+
+      return { success: true, user: userData };
     } catch (error) {
       return { success: false, error: "Erreur de connexion" };
     }
   };
 
-  // Inscription
+  // Inscription (simulée pour les tests)
   const register = async (email, password, phoneMtn = null) => {
     try {
-      const response = await fetch("/.netlify/functions/auth-register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password, phoneMtn }),
-      });
+      // Simulation d'un délai réseau
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("anglaisCongo_token", data.token);
-        setUser(data.user);
-        return { success: true, user: data.user };
-      } else {
-        const error = await response.json();
-        return { success: false, error: error.message };
-      }
+      const userData = {
+        id: Math.random().toString(36).substr(2, 9),
+        email: email,
+        phoneMtn: phoneMtn,
+        subscription_type: "gratuit",
+        created_at: new Date().toISOString(),
+      };
+
+      localStorage.setItem("anglaisCongo_token", "test-token-" + userData.id);
+      setUser(userData);
+
+      return { success: true, user: userData };
     } catch (error) {
       return { success: false, error: "Erreur d'inscription" };
     }
@@ -103,27 +95,12 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  // Mettre à jour le profil
+  // Mettre à jour le profil (simulé)
   const updateProfile = async (updates) => {
     try {
-      const token = localStorage.getItem("anglaisCongo_token");
-      const response = await fetch("/.netlify/functions/auth-update-profile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(updates),
-      });
-
-      if (response.ok) {
-        const updatedUser = await response.json();
-        setUser(updatedUser);
-        return { success: true, user: updatedUser };
-      } else {
-        const error = await response.json();
-        return { success: false, error: error.message };
-      }
+      const updatedUser = { ...user, ...updates };
+      setUser(updatedUser);
+      return { success: true, user: updatedUser };
     } catch (error) {
       return { success: false, error: "Erreur de mise à jour" };
     }

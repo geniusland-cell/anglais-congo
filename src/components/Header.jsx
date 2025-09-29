@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import LoginForm from "./auth/LoginForm"; // ← AJOUTER CET IMPORT
+import React, { useState, useEffect } from "react";
+import LoginForm from "./auth/LoginForm";
+import RegisterForm from "./auth/RegisterForm"; // ← AJOUTER CET IMPORT
 import "./Header.css";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false); // ← NOUVEL ÉTAT
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState("login"); // 'login' ou 'register'
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +23,14 @@ const Header = () => {
       section.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  const handleAuthClose = () => {
+    setShowAuthModal(false);
+    setAuthMode("login"); // Reset au mode login
+  };
+
+  const switchToRegister = () => setAuthMode("register");
+  const switchToLogin = () => setAuthMode("login");
 
   return (
     <>
@@ -75,7 +85,7 @@ const Header = () => {
                 Exercices
               </a>
             </li>
-            {/* NOUVEAU BOUTON CONNEXION */}
+            {/* BOUTON CONNEXION */}
             <li>
               <button
                 className="auth-btn"
@@ -90,9 +100,19 @@ const Header = () => {
 
       {/* MODALE AUTH */}
       {showAuthModal && (
-        <div className="modal-overlay" onClick={() => setShowAuthModal(false)}>
+        <div className="modal-overlay" onClick={handleAuthClose}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <LoginForm onClose={() => setShowAuthModal(false)} />
+            {authMode === "login" ? (
+              <LoginForm
+                onClose={handleAuthClose}
+                onSwitchToRegister={switchToRegister}
+              />
+            ) : (
+              <RegisterForm
+                onClose={handleAuthClose}
+                onSwitchToLogin={switchToLogin}
+              />
+            )}
           </div>
         </div>
       )}
