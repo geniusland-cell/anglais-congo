@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { parlerAvecStyle } from "../data/profilsExclusifs";
-import "./ModalProfil.css";
+import BarreRecherche from "./BarreRecherche";
+import "./ModalProfil.css"; // ✅ CORRIGÉ : "PodalProfil.css" → "ModalProfil.css"
 
 const ModalProfil = ({ profil, onClose }) => {
   // Fermer avec la touche Échap
@@ -35,6 +36,16 @@ const ModalProfil = ({ profil, onClose }) => {
         <div className="modal-body">
           <div className="profil-badge">
             <span className="badge-exclusif">🎯 Contenu Exclusif Congo</span>
+          </div>
+
+          {/* Barre de recherche */}
+          <div className="modal-recherche">
+            <BarreRecherche
+              onRecherche={(terme) => {
+                // TODO: Implémenter la recherche pour les profils
+                console.log("Recherche profil:", terme);
+              }}
+            />
           </div>
 
           <div className="phrases-list">

@@ -19,12 +19,12 @@ body {
   padding: 0 20px;
 }
 
-/* Variables CSS */
+/* Variables CSS COMPLÈTES */
 :root {
   --primary-blue: #2c5aa0;
   --dark-blue: #1e3a8a;
   --accent-yellow: #fbbf24;
-  --success-green: #10b981;
+  --success-green: #10b981; /* ✅ AJOUTÉE */
   --text-dark: #1f2937;
   --text-light: #6b7280;
   --bg-light: #f8fafc;

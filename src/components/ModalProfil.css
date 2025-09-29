@@ -391,3 +391,74 @@
     left: 100%;
   }
 }
+
+/* Ajouter cette section dans ModalProfil.css */
+
+.modal-recherche {
+  margin-bottom: 1.5rem;
+}
+
+.recherche-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.recherche-input {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.recherche-input:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 4px 20px rgba(44, 90, 160, 0.15);
+}
+
+.recherche-input::placeholder {
+  color: #9ca3af;
+}
+
+.btn-vider {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.btn-vider:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* Responsive pour ModalProfil */
+@media (max-width: 768px) {
+  .recherche-input {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-vider {
+    right: 0.75rem;
+    width: 26px;
+    height: 26px;
+    font-size: 1.2rem;
+  }
+}

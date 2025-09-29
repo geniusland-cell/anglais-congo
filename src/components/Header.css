@@ -47,7 +47,7 @@
 }
 
 .nav-links a::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -5px;
   left: 0;
@@ -67,11 +67,11 @@
     gap: 1rem;
     padding: 1rem 0;
   }
-  
+
   .nav-links {
     gap: 1.5rem;
   }
-  
+
   .logo h2 {
     font-size: 1.5rem;
   }
