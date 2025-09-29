@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import "./AuthForms.css";
+import "./LoginForm.css";
 
 const LoginForm = ({ onSwitchToRegister, onClose }) => {
   const [email, setEmail] = useState("");
@@ -18,7 +18,7 @@ const LoginForm = ({ onSwitchToRegister, onClose }) => {
     const result = await login(email, password);
 
     if (result.success) {
-      onClose?.(); // Fermer la modale si réussite
+      onClose?.();
     } else {
       setError(result.error);
     }
@@ -27,12 +27,12 @@ const LoginForm = ({ onSwitchToRegister, onClose }) => {
   };
 
   return (
-    <div className="auth-form-container">
-      <div className="auth-form">
+    <div className="login-form-container">
+      <div className="login-form">
         <h2>Connexion</h2>
-        <p className="auth-subtitle">Accédez à votre compte</p>
+        <p className="login-subtitle">Accédez à votre compte</p>
 
-        {error && <div className="auth-error">{error}</div>}
+        {error && <div className="login-error">{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -59,16 +59,16 @@ const LoginForm = ({ onSwitchToRegister, onClose }) => {
             />
           </div>
 
-          <button type="submit" className="auth-submit-btn" disabled={loading}>
+          <button type="submit" className="login-submit-btn" disabled={loading}>
             {loading ? "Connexion..." : "Se connecter"}
           </button>
         </form>
 
-        <div className="auth-switch">
+        <div className="login-switch">
           <span>Pas de compte ? </span>
           <button
             type="button"
-            className="auth-switch-btn"
+            className="login-switch-btn"
             onClick={onSwitchToRegister}
           >
             Créer un compte

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import LoginForm from "./auth/LoginForm";
-import RegisterForm from "./auth/RegisterForm"; // ← AJOUTER CET IMPORT
+import RegisterForm from "./auth/RegisterForm";
 import "./Header.css";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [authMode, setAuthMode] = useState("login"); // 'login' ou 'register'
+  const [authMode, setAuthMode] = useState("login");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,7 +26,7 @@ const Header = () => {
 
   const handleAuthClose = () => {
     setShowAuthModal(false);
-    setAuthMode("login"); // Reset au mode login
+    setAuthMode("login");
   };
 
   const switchToRegister = () => setAuthMode("register");
@@ -85,7 +85,6 @@ const Header = () => {
                 Exercices
               </a>
             </li>
-            {/* BOUTON CONNEXION */}
             <li>
               <button
                 className="auth-btn"
@@ -98,7 +97,6 @@ const Header = () => {
         </nav>
       </header>
 
-      {/* MODALE AUTH */}
       {showAuthModal && (
         <div className="modal-overlay" onClick={handleAuthClose}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>

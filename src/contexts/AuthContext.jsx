@@ -1,9 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 
-// Création du contexte
 const AuthContext = createContext();
 
-// Hook personnalisé pour utiliser le contexte
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -12,12 +10,10 @@ export const useAuth = () => {
   return context;
 };
 
-// Fournisseur du contexte
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Vérifier si l'utilisateur est déjà connecté au chargement
   useEffect(() => {
     checkAuthStatus();
   }, []);
@@ -26,8 +22,6 @@ export const AuthProvider = ({ children }) => {
     try {
       const token = localStorage.getItem("anglaisCongo_token");
       if (token) {
-        // Pour la phase test, on simule un utilisateur
-        // Plus tard, on fera une vraie vérification API
         const simulatedUser = {
           id: 1,
           email: "test@example.com",
@@ -43,13 +37,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Connexion (simulée pour les tests)
   const login = async (email, password) => {
     try {
-      // Simulation d'un délai réseau
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Pour les tests, on accepte n'importe quel email/mot de passe
       const userData = {
         id: Math.random().toString(36).substr(2, 9),
         email: email,
@@ -66,10 +57,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Inscription (simulée pour les tests)
   const register = async (email, password, phoneMtn = null) => {
     try {
-      // Simulation d'un délai réseau
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const userData = {
@@ -89,13 +78,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Déconnexion
   const logout = () => {
     localStorage.removeItem("anglaisCongo_token");
     setUser(null);
   };
 
-  // Mettre à jour le profil (simulé)
   const updateProfile = async (updates) => {
     try {
       const updatedUser = { ...user, ...updates };
@@ -106,7 +93,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Valeur du contexte
   const value = {
     user,
     loading,

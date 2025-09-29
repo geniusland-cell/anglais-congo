@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import "./AuthForms.css";
+import "./RegisterForm.css";
 
 const RegisterForm = ({ onSwitchToLogin, onClose }) => {
   const [formData, setFormData] = useState({
@@ -26,7 +26,6 @@ const RegisterForm = ({ onSwitchToLogin, onClose }) => {
     setLoading(true);
     setError("");
 
-    // Validation
     if (formData.password !== formData.confirmPassword) {
       setError("Les mots de passe ne correspondent pas");
       setLoading(false);
@@ -46,7 +45,7 @@ const RegisterForm = ({ onSwitchToLogin, onClose }) => {
     );
 
     if (result.success) {
-      onClose?.(); // Fermer la modale si réussite
+      onClose?.();
     } else {
       setError(result.error);
     }
@@ -55,12 +54,14 @@ const RegisterForm = ({ onSwitchToLogin, onClose }) => {
   };
 
   return (
-    <div className="auth-form-container">
-      <div className="auth-form">
+    <div className="register-form-container">
+      <div className="register-form">
         <h2>Créer un compte</h2>
-        <p className="auth-subtitle">Rejoignez la communauté AnglaisCongo</p>
+        <p className="register-subtitle">
+          Rejoignez la communauté AnglaisCongo
+        </p>
 
-        {error && <div className="auth-error">{error}</div>}
+        {error && <div className="register-error">{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -114,16 +115,20 @@ const RegisterForm = ({ onSwitchToLogin, onClose }) => {
             />
           </div>
 
-          <button type="submit" className="auth-submit-btn" disabled={loading}>
+          <button
+            type="submit"
+            className="register-submit-btn"
+            disabled={loading}
+          >
             {loading ? "Création..." : "Créer mon compte"}
           </button>
         </form>
 
-        <div className="auth-switch">
+        <div className="register-switch">
           <span>Déjà un compte ? </span>
           <button
             type="button"
-            className="auth-switch-btn"
+            className="register-switch-btn"
             onClick={onSwitchToLogin}
           >
             Se connecter

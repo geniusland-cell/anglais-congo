@@ -1,4 +1,4 @@
-.auth-form-container {
+.login-form-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -6,7 +6,7 @@
   padding: 1rem;
 }
 
-.auth-form {
+.login-form {
   background: white;
   padding: 2rem;
   border-radius: 12px;
@@ -15,14 +15,14 @@
   max-width: 400px;
 }
 
-.auth-form h2 {
+.login-form h2 {
   color: var(--primary-blue);
   text-align: center;
   margin-bottom: 0.5rem;
   font-size: 1.5rem;
 }
 
-.auth-subtitle {
+.login-subtitle {
   text-align: center;
   color: var(--text-light);
   margin-bottom: 2rem;
@@ -57,7 +57,7 @@
   background: white;
 }
 
-.auth-submit-btn {
+.login-submit-btn {
   width: 100%;
   padding: 1rem;
   background: var(--primary-blue);
@@ -71,18 +71,18 @@
   margin-bottom: 1.5rem;
 }
 
-.auth-submit-btn:hover:not(:disabled) {
+.login-submit-btn:hover:not(:disabled) {
   background: var(--dark-blue);
   transform: translateY(-2px);
 }
 
-.auth-submit-btn:disabled {
+.login-submit-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
 
-.auth-error {
+.login-error {
   background: #fee2e2;
   color: #dc2626;
   padding: 0.75rem 1rem;
@@ -92,13 +92,13 @@
   border: 1px solid #fecaca;
 }
 
-.auth-switch {
+.login-switch {
   text-align: center;
   color: var(--text-light);
   font-size: 0.9rem;
 }
 
-.auth-switch-btn {
+.login-switch-btn {
   background: none;
   border: none;
   color: var(--primary-blue);
@@ -107,18 +107,17 @@
   text-decoration: underline;
 }
 
-.auth-switch-btn:hover {
+.login-switch-btn:hover {
   color: var(--dark-blue);
 }
 
-/* Responsive */
 @media (max-width: 480px) {
-  .auth-form {
+  .login-form {
     padding: 1.5rem;
     margin: 0.5rem;
   }
 
-  .auth-form h2 {
+  .login-form h2 {
     font-size: 1.3rem;
   }
 }
