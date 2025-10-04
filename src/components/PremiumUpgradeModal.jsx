@@ -1,149 +1,288 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import {
+  X,
+  Crown,
+  Users,
+  GraduationCap,
+  Briefcase,
+  Check,
+  Star,
+} from "lucide-react";
 import "./PremiumUpgradeModal.css";
 
-const PremiumUpgradeModal = ({ isOpen, onClose, feature }) => {
-  const { updateSubscription } = useAuth();
+const PremiumUpgradeModal = ({ onClose, selectedPlan = null }) => {
+  const { user, upgradeToPremium } = useAuth();
+  const [selectedPlanType, setSelectedPlanType] = useState(
+    selectedPlan || "famille"
+  );
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  if (!isOpen) return null;
-
-  const plans = [
-    {
-      id: "famille",
-      nom: "Famille",
-      prix: "2500 FCFA/mois",
-      description: "Parfait pour toute la famille",
+  const plans = {
+    famille: {
+      name: "Famille",
+      icon: <Users size={32} />,
+      price: "15,000 FC",
+      priceUSD: "$15",
+      duration: "/mois",
+      color: "#e74c3c",
+      gradient: "linear-gradient(135deg, #e74c3c, #c0392b)",
+      description: "Parfait pour toute la famille avec contenu enfants inclus",
       features: [
-        "✅ Profil ENFANT avec comptines",
-        "✅ Contenu Lingala + Français",
-        "✅ Jeux éducatifs interactifs",
-        "✅ Histoires congolaises",
-        "✅ Support prioritaire",
+        "Accès complet pour toute la famille",
+        "Contenu spécialisé pour enfants",
+        "Jeux interactifs et chansons",
+        "Profils multiples (parents + enfants)",
+        "Contrôle parental avancé",
+        "Exercices adaptés par âge",
+        "Support prioritaire",
+        "Certificats de progression",
       ],
       popular: true,
     },
-    {
-      id: "etudiant",
-      nom: "Étudiant",
-      prix: "1500 FCFA/mois",
-      description: "Idéal pour les étudiants",
+    etudiant: {
+      name: "Étudiant",
+      icon: <GraduationCap size={32} />,
+      price: "8,000 FC",
+      priceUSD: "$8",
+      duration: "/mois",
+      color: "#27ae60",
+      gradient: "linear-gradient(135deg, #27ae60, #2ecc71)",
+      description: "Tarif réduit pour étudiants avec accès étendu",
       features: [
-        "✅ Tous les profils exclusifs",
-        "✅ Contenu académique avancé",
-        "✅ Exercices universitaires",
-        "✅ Certificats de progression",
+        "Tarif étudiant préférentiel",
+        "Accès à tous les cours",
+        "Exercices illimités",
+        "Suivi de progression détaillé",
+        "Certificats officiels",
+        "Communauté étudiante",
+        "Ressources d'étude",
+        "Support technique",
       ],
+      popular: false,
     },
-    {
-      id: "business",
-      nom: "Business",
-      prix: "5000 FCFA/mois",
-      description: "Pour les professionnels",
+    business: {
+      name: "Professionnel",
+      icon: <Briefcase size={32} />,
+      price: "25,000 FC",
+      priceUSD: "$25",
+      duration: "/mois",
+      color: "#3498db",
+      gradient: "linear-gradient(135deg, #3498db, #2980b9)",
+      description: "Accès complet pour professionnels et entreprises",
       features: [
-        "✅ Vocabulaire business avancé",
-        "✅ Simulations de réunions",
-        "✅ Anglais des affaires",
-        "✅ Coaching personnalisé",
+        "Accès illimité à tout le contenu",
+        "Anglais des affaires spécialisé",
+        "Formations sectorielles",
+        "Certificats professionnels",
+        "Support prioritaire 24/7",
+        "Rapports de progression",
+        "Intégration équipe",
+        "Formations personnalisées",
       ],
+      popular: false,
     },
-  ];
+  };
 
-  const handleUpgrade = async (planId) => {
+  const handlePlanSelect = (planType) => {
+    setSelectedPlanType(planType);
+    setError("");
+  };
+
+  const handleUpgrade = async () => {
+    if (!selectedPlanType) {
+      setError("Veuillez sélectionner un plan");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+
     try {
-      const result = await updateSubscription(planId);
-      if (result.success) {
-        alert(
-          `🎉 Félicitations ! Vous êtes maintenant abonné au plan ${planId.toUpperCase()}`
-        );
+      const success = await upgradeToPremium(selectedPlanType);
+      if (success) {
         onClose();
-        // Recharger la page pour mettre à jour l'accès
-        window.location.reload();
+      } else {
+        setError("Erreur lors de la mise à niveau. Veuillez réessayer.");
       }
-    } catch (error) {
-      alert("❌ Erreur lors de la mise à jour. Veuillez réessayer.");
+    } catch (err) {
+      setError(
+        "Erreur de connexion. Veuillez vérifier votre connexion internet."
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="modal-overlay premium-modal" onClick={onClose}>
+    <div className="premium-modal-overlay" onClick={onClose}>
       <div
-        className="modal-content premium-content"
+        className="premium-modal-content"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="premium-header">
-          <h2>🚀 Débloquez tout le potentiel d'AnglaisCongo</h2>
-          <p>
-            Accédez au contenu exclusif : <strong>{feature}</strong>
-          </p>
-          <button className="modal-close" onClick={onClose}>
-            ×
+        <div className="premium-modal-header">
+          <div className="premium-header-content">
+            <Crown className="premium-crown-icon" size={40} />
+            <h2>Passez au Premium</h2>
+            <p>Débloquez tout le potentiel d'AnglaisCongo</p>
+          </div>
+          <button className="premium-close-btn" onClick={onClose}>
+            <X size={24} />
           </button>
         </div>
 
-        <div className="premium-body">
-          <div className="plans-grid">
-            {plans.map((plan) => (
+        <div className="premium-modal-body">
+          {error && <div className="premium-error-message">⚠️ {error}</div>}
+
+          <div className="premium-plans-grid">
+            {Object.entries(plans).map(([key, plan]) => (
               <div
-                key={plan.id}
-                className={`plan-card ${plan.popular ? "popular" : ""}`}
+                key={key}
+                className={`premium-plan-card ${
+                  selectedPlanType === key ? "selected" : ""
+                } ${plan.popular ? "popular" : ""}`}
+                onClick={() => handlePlanSelect(key)}
               >
                 {plan.popular && (
-                  <div className="popular-badge">🔥 Populaire</div>
+                  <div className="popular-badge">
+                    <Star size={16} />
+                    Plus populaire
+                  </div>
                 )}
 
-                <div className="plan-header">
-                  <h3>{plan.nom}</h3>
-                  <div className="plan-prix">{plan.prix}</div>
-                  <p>{plan.description}</p>
-                </div>
-
-                <div className="plan-features">
-                  {plan.features.map((feature, index) => (
-                    <div key={index} className="feature-item">
-                      {feature}
-                    </div>
-                  ))}
-                </div>
-
-                <button
-                  className={`btn-upgrade ${plan.popular ? "btn-popular" : ""}`}
-                  onClick={() => handleUpgrade(plan.id)}
+                <div
+                  className="plan-header"
+                  style={{ background: plan.gradient }}
                 >
-                  {plan.popular ? "🌟 Choisir ce plan" : "Sélectionner"}
-                </button>
+                  <div className="plan-icon">{plan.icon}</div>
+                  <h3>{plan.name}</h3>
+                  <div className="plan-price">
+                    <span className="price-main">{plan.price}</span>
+                    <span className="price-usd">({plan.priceUSD})</span>
+                    <span className="price-duration">{plan.duration}</span>
+                  </div>
+                </div>
+
+                <div className="plan-body">
+                  <p className="plan-description">{plan.description}</p>
+
+                  <div className="plan-features">
+                    {plan.features.map((feature, index) => (
+                      <div key={index} className="feature-item">
+                        <Check size={16} className="feature-check" />
+                        <span>{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="plan-footer">
+                  <div
+                    className={`select-indicator ${
+                      selectedPlanType === key ? "selected" : ""
+                    }`}
+                  >
+                    {selectedPlanType === key
+                      ? "✓ Sélectionné"
+                      : "Sélectionner"}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
 
-          <div className="payment-info">
-            <h3>💳 Moyens de paiement</h3>
-            <div className="payment-methods">
-              <div className="payment-method">
-                <span>📱 MTN Mobile Money</span>
-                <span className="coming-soon">Bientôt disponible</span>
+          <div className="premium-benefits">
+            <h3>🎯 Pourquoi choisir Premium ?</h3>
+            <div className="benefits-grid">
+              <div className="benefit-item">
+                <div className="benefit-icon">🚀</div>
+                <div className="benefit-content">
+                  <h4>Progression accélérée</h4>
+                  <p>Apprenez 3x plus vite avec nos méthodes avancées</p>
+                </div>
               </div>
-              <div className="payment-method">
-                <span>💰 CinetPay</span>
-                <span className="coming-soon">Bientôt disponible</span>
+              <div className="benefit-item">
+                <div className="benefit-icon">🎮</div>
+                <div className="benefit-content">
+                  <h4>Contenu interactif</h4>
+                  <p>Jeux, quiz et exercices adaptés au contexte congolais</p>
+                </div>
+              </div>
+              <div className="benefit-item">
+                <div className="benefit-icon">👨‍👩‍👧‍👦</div>
+                <div className="benefit-content">
+                  <h4>Pour toute la famille</h4>
+                  <p>Contenu adapté à tous les âges et niveaux</p>
+                </div>
+              </div>
+              <div className="benefit-item">
+                <div className="benefit-icon">🏆</div>
+                <div className="benefit-content">
+                  <h4>Certificats officiels</h4>
+                  <p>Validez vos compétences avec nos certifications</p>
+                </div>
               </div>
             </div>
-            <p className="payment-note">
-              🔒 Paiements sécurisés • ❌ Annulation à tout moment • 🎯 Support
-              client dédié
+          </div>
+
+          <div className="premium-payment-info">
+            <h4>💳 Modes de paiement acceptés</h4>
+            <div className="payment-methods">
+              <div className="payment-method">
+                <span className="payment-icon">📱</span>
+                <span>MTN Mobile Money</span>
+              </div>
+              <div className="payment-method">
+                <span className="payment-icon">📱</span>
+                <span>Orange Money</span>
+              </div>
+              <div className="payment-method">
+                <span className="payment-icon">💳</span>
+                <span>Carte bancaire</span>
+              </div>
+              <div className="payment-method">
+                <span className="payment-icon">🏦</span>
+                <span>Virement bancaire</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="premium-actions">
+            <button
+              className="premium-upgrade-btn"
+              onClick={handleUpgrade}
+              disabled={isLoading || !selectedPlanType}
+              style={{ background: plans[selectedPlanType]?.gradient }}
+            >
+              {isLoading ? (
+                <>
+                  <div className="loading-spinner"></div>
+                  Traitement...
+                </>
+              ) : (
+                <>
+                  <Crown size={20} />
+                  Passer au {plans[selectedPlanType]?.name} -{" "}
+                  {plans[selectedPlanType]?.price}
+                </>
+              )}
+            </button>
+
+            <button className="premium-cancel-btn" onClick={onClose}>
+              Plus tard
+            </button>
+          </div>
+
+          <div className="premium-guarantee">
+            <p>
+              ✅ <strong>Garantie satisfait ou remboursé 30 jours</strong>
+              <br />
+              🔒 Paiement 100% sécurisé
+              <br />
+              📞 Support client disponible 24/7
             </p>
           </div>
-        </div>
-
-        <div className="premium-footer">
-          <button className="btn-secondary" onClick={onClose}>
-            Peut-être plus tard
-          </button>
-          <button
-            className="btn-primary"
-            onClick={() => handleUpgrade("famille")}
-          >
-            🚀 Commencer maintenant
-          </button>
         </div>
       </div>
     </div>
