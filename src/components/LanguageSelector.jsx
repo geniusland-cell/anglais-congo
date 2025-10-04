@@ -1,129 +1,110 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import PremiumUpgradeModal from "./PremiumUpgradeModal";
 import "./LanguageSelector.css";
 
-const LanguageSelector = ({ onClose }) => {
-  const { userPreferences, updateLanguagePreference, canAccessLingala } =
-    useAuth();
+const LanguageSelector = () => {
+  const { userPreferences, updateLanguagePreference, user } = useAuth();
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   const languages = [
     {
       code: "fr",
       name: "Français",
       flag: "🇫🇷",
-      description: "Apprendre l'anglais depuis le français",
-      available: true, // Toujours disponible
+      description: "Apprendre l'anglais en français",
+      isPremium: false,
     },
     {
       code: "ln",
       name: "Lingala",
-      flag: "🇨🇬",
-      description: "Apprendre l'anglais depuis le lingala",
-      available: canAccessLingala, // Seulement si premium
+      flag: "🇨🇩",
+      description: "Koyekola Lingelesi na Lingala",
+      isPremium: true,
     },
   ];
 
-  const handleLanguageChange = (languageCode) => {
+  const handleLanguageSelect = (languageCode) => {
+    // Vérifier si c'est le Lingala et si l'utilisateur n'est pas Premium
+    if (languageCode === "ln" && (!user || !user.isPremium)) {
+      setShowPremiumModal(true);
+      return;
+    }
+
+    // Sinon, changer la langue normalement
     updateLanguagePreference(languageCode);
-    onClose?.(); // Fermer la modale si fournie
-  };
-
-  const getLanguageStatus = (language) => {
-    if (!language.available) {
-      return {
-        type: "premium",
-        message: "Abonnement requis",
-      };
-    }
-
-    if (userPreferences.learningLanguage === language.code) {
-      return {
-        type: "selected",
-        message: "Actuellement sélectionné",
-      };
-    }
-
-    return {
-      type: "available",
-      message: "Cliquez pour sélectionner",
-    };
   };
 
   return (
-    <div className="language-selector">
-      <div className="language-header">
-        <h2>🌍 Choisissez votre langue</h2>
-        <p>
-          Sélectionnez la langue depuis laquelle vous voulez apprendre l'anglais
-        </p>
-      </div>
+    <>
+      <div className="language-selector">
+        <h3>🌍 Choisissez votre langue d'apprentissage</h3>
+        <div className="languages-grid">
+          {languages.map((language) => {
+            const isSelected =
+              userPreferences.learningLanguage === language.code;
+            const isLocked = language.isPremium && (!user || !user.isPremium);
 
-      <div className="language-options">
-        {languages.map((language) => {
-          const status = getLanguageStatus(language);
-
-          return (
-            <div
-              key={language.code}
-              className={`language-option ${status.type} ${
-                userPreferences.learningLanguage === language.code
-                  ? "active"
-                  : ""
-              }`}
-              onClick={() =>
-                language.available && handleLanguageChange(language.code)
-              }
-            >
-              <div className="language-flag">{language.flag}</div>
-
-              <div className="language-content">
-                <div className="language-title">
-                  <h3>{language.name} → 🇬🇧 Anglais</h3>
-                  <span className="language-status">{status.message}</span>
+            return (
+              <div
+                key={language.code}
+                className={`language-card ${isSelected ? "selected" : ""} ${
+                  isLocked ? "premium-locked" : ""
+                }`}
+                onClick={() => handleLanguageSelect(language.code)}
+              >
+                <div className="language-flag">
+                  {isLocked ? "🔒" : language.flag}
                 </div>
-                <p className="language-description">{language.description}</p>
-
-                {status.type === "premium" && (
-                  <div className="premium-badge">
-                    <span className="premium-icon">⭐</span>
-                    Fonctionnalité Premium
-                  </div>
-                )}
+                <div className="language-info">
+                  <h4>
+                    {language.name}
+                    {language.isPremium && (
+                      <span className="premium-badge">🌟</span>
+                    )}
+                  </h4>
+                  <p>{language.description}</p>
+                  {isLocked && (
+                    <div className="premium-notice-small">Premium requis</div>
+                  )}
+                </div>
+                <div className="language-status">
+                  {isSelected ? "✅" : isLocked ? "🌟" : "○"}
+                </div>
               </div>
+            );
+          })}
+        </div>
 
-              <div className="language-indicator">
-                {userPreferences.learningLanguage === language.code ? (
-                  <div className="indicator-active">✓</div>
-                ) : (
-                  <div className="indicator-inactive"></div>
-                )}
+        {userPreferences.learningLanguage === "ln" &&
+          (!user || !user.isPremium) && (
+            <div className="premium-warning">
+              <div className="warning-content">
+                <span className="warning-icon">⚠️</span>
+                <p>
+                  Vous avez sélectionné Lingala mais n'avez pas d'abonnement
+                  Premium. Le contenu sera limité.
+                </p>
+                <button
+                  className="upgrade-btn-small"
+                  onClick={() => setShowPremiumModal(true)}
+                >
+                  🚀 Passer au Premium
+                </button>
               </div>
             </div>
-          );
-        })}
+          )}
       </div>
 
-      {!canAccessLingala && (
-        <div className="language-upsell">
-          <div className="upsell-content">
-            <h4>🚀 Débloquez le Lingala !</h4>
-            <p>Passez Premium pour apprendre l'anglais depuis le Lingala</p>
-            <ul>
-              <li>✅ Contenu adapté à la culture congolaise</li>
-              <li>✅ Prononciation lingala authentique</li>
-              <li>✅ Expressions du quotidien</li>
-            </ul>
-          </div>
-        </div>
+      {/* Modal Premium Upgrade */}
+      {showPremiumModal && (
+        <PremiumUpgradeModal
+          isOpen={showPremiumModal}
+          onClose={() => setShowPremiumModal(false)}
+          reason="lingala"
+        />
       )}
-
-      <div className="language-footer">
-        <p className="language-note">
-          ⚠️ Vous pourrez changer cette préférence à tout moment dans vos
-          paramètres
-        </p>
-      </div>
-    </div>
+    </>
   );
 };
 

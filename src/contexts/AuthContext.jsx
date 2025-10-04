@@ -1,197 +1,264 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-// Création du contexte
+// Contexte d'authentification
 const AuthContext = createContext();
 
 // Hook personnalisé pour utiliser le contexte
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error("useAuth doit être utilisé dans un AuthProvider");
   }
   return context;
 };
 
-// Fournisseur du contexte
-export const AuthProvider = ({ children }) => {
+// Comptes de démonstration
+const demoAccounts = {
+  "demo@famille.com": {
+    email: "demo@famille.com",
+    password: "demo123",
+    prenom: "Marie",
+    nom: "Famille",
+    userType: "famille",
+    isPremium: false,
+    createdAt: new Date().toISOString(),
+  },
+  "premium@famille.com": {
+    email: "premium@famille.com",
+    password: "premium123",
+    prenom: "Jean",
+    nom: "Premium",
+    userType: "famille",
+    isPremium: true,
+    createdAt: new Date().toISOString(),
+  },
+  "etudiant@demo.com": {
+    email: "etudiant@demo.com",
+    password: "etudiant123",
+    prenom: "Paul",
+    nom: "Étudiant",
+    userType: "etudiant",
+    isPremium: false,
+    createdAt: new Date().toISOString(),
+  },
+};
+
+// Composant Provider
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userPreferences, setUserPreferences] = useState({
-    learningLanguage: "fr", // 'fr' ou 'ln'
+    learningLanguage: "fr",
+    nativeLanguage: "fr",
+    difficultyLevel: "debutant",
   });
 
-  // Charger les préférences depuis localStorage au démarrage
+  // Charger les données depuis localStorage au démarrage
   useEffect(() => {
-    loadUserPreferences();
-    checkAuthStatus();
+    const savedUser = localStorage.getItem("anglais_user");
+    const savedPreferences = localStorage.getItem("anglais_preferences");
+
+    if (savedUser) {
+      try {
+        const userData = JSON.parse(savedUser);
+        setUser(userData);
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error(
+          "Erreur lors du chargement des données utilisateur:",
+          error
+        );
+        localStorage.removeItem("anglais_user");
+      }
+    }
+
+    if (savedPreferences) {
+      try {
+        const preferencesData = JSON.parse(savedPreferences);
+        setUserPreferences(preferencesData);
+      } catch (error) {
+        console.error("Erreur lors du chargement des préférences:", error);
+        localStorage.removeItem("anglais_preferences");
+      }
+    }
   }, []);
 
-  const loadUserPreferences = () => {
-    try {
-      const savedPrefs = localStorage.getItem("anglaisCongo_preferences");
-      if (savedPrefs) {
-        const prefs = JSON.parse(savedPrefs);
-        setUserPreferences(prefs);
-      }
-    } catch (error) {
-      console.error("Erreur chargement préférences:", error);
-    }
-  };
-
-  const saveUserPreferences = (prefs) => {
-    try {
-      localStorage.setItem("anglaisCongo_preferences", JSON.stringify(prefs));
-    } catch (error) {
-      console.error("Erreur sauvegarde préférences:", error);
-    }
-  };
-
-  // Vérifier si l'utilisateur est déjà connecté au chargement
-  const checkAuthStatus = async () => {
-    try {
-      const token = localStorage.getItem("anglaisCongo_token");
-      if (token) {
-        // Pour la phase test, on simule un utilisateur
-        const simulatedUser = {
-          id: 1,
-          email: "test@example.com",
-          subscription_type: "gratuit", // 'gratuit', 'famille', 'etudiant', 'business'
-          created_at: new Date().toISOString(),
-        };
-        setUser(simulatedUser);
-      }
-    } catch (error) {
-      console.error("Erreur vérification auth:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Mettre à jour la préférence de langue
-  const updateLanguagePreference = (language) => {
-    const newPrefs = { ...userPreferences, learningLanguage: language };
-    setUserPreferences(newPrefs);
-    saveUserPreferences(newPrefs);
-
-    console.log(`🌍 Langue d'apprentissage changée: ${language}`);
-  };
-
-  // Vérifier si l'utilisateur a accès au lingala
-  const canAccessLingala = () => {
-    return user?.subscription_type !== "gratuit";
-  };
-
-  // Vérifier si l'utilisateur a accès au contenu premium
-  const hasPremiumAccess = () => {
-    return user?.subscription_type !== "gratuit";
-  };
-
-  // Connexion (simulée pour les tests)
+  // Fonction de connexion
   const login = async (email, password) => {
     try {
-      // Simulation d'un délai réseau
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Vérifier les comptes de démonstration
+      if (demoAccounts[email] && demoAccounts[email].password === password) {
+        const userData = { ...demoAccounts[email] };
+        delete userData.password; // Ne pas stocker le mot de passe
 
-      // Pour les tests, on accepte n'importe quel email/mot de passe
-      const userData = {
-        id: Math.random().toString(36).substr(2, 9),
-        email: email,
-        subscription_type: "gratuit", // Par défaut gratuit
-        created_at: new Date().toISOString(),
-      };
+        setUser(userData);
+        setIsAuthenticated(true);
+        localStorage.setItem("anglais_user", JSON.stringify(userData));
 
-      localStorage.setItem("anglaisCongo_token", "test-token-" + userData.id);
-      setUser(userData);
+        return { success: true, user: userData };
+      }
 
-      return { success: true, user: userData };
+      // Vérifier les utilisateurs enregistrés
+      const registeredUsers = JSON.parse(
+        localStorage.getItem("anglais_registered_users") || "{}"
+      );
+
+      if (
+        registeredUsers[email] &&
+        registeredUsers[email].password === password
+      ) {
+        const userData = { ...registeredUsers[email] };
+        delete userData.password;
+
+        setUser(userData);
+        setIsAuthenticated(true);
+        localStorage.setItem("anglais_user", JSON.stringify(userData));
+
+        return { success: true, user: userData };
+      }
+
+      return { success: false, error: "Email ou mot de passe incorrect" };
     } catch (error) {
+      console.error("Erreur lors de la connexion:", error);
       return { success: false, error: "Erreur de connexion" };
     }
   };
 
-  // Inscription (simulée pour les tests)
-  const register = async (email, password, phoneMtn = null) => {
+  // Fonction d'inscription
+  const register = async (userData) => {
     try {
-      // Simulation d'un délai réseau
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { email, password, prenom, nom, userType } = userData;
 
-      const userData = {
-        id: Math.random().toString(36).substr(2, 9),
-        email: email,
-        phoneMtn: phoneMtn,
-        subscription_type: "gratuit", // Par défaut gratuit
-        created_at: new Date().toISOString(),
+      // Vérifier si l'email existe déjà
+      const registeredUsers = JSON.parse(
+        localStorage.getItem("anglais_registered_users") || "{}"
+      );
+
+      if (registeredUsers[email] || demoAccounts[email]) {
+        return { success: false, error: "Cet email est déjà utilisé" };
+      }
+
+      // Créer le nouvel utilisateur
+      const newUser = {
+        email,
+        password,
+        prenom,
+        nom,
+        userType: userType || "famille",
+        isPremium: false,
+        createdAt: new Date().toISOString(),
       };
 
-      localStorage.setItem("anglaisCongo_token", "test-token-" + userData.id);
-      setUser(userData);
+      // Sauvegarder dans localStorage
+      registeredUsers[email] = newUser;
+      localStorage.setItem(
+        "anglais_registered_users",
+        JSON.stringify(registeredUsers)
+      );
 
-      return { success: true, user: userData };
+      // Connecter automatiquement l'utilisateur
+      const userForSession = { ...newUser };
+      delete userForSession.password;
+
+      setUser(userForSession);
+      setIsAuthenticated(true);
+      localStorage.setItem("anglais_user", JSON.stringify(userForSession));
+
+      return { success: true, user: userForSession };
     } catch (error) {
-      return { success: false, error: "Erreur d'inscription" };
+      console.error("Erreur lors de l'inscription:", error);
+      return { success: false, error: "Erreur lors de l'inscription" };
     }
   };
 
-  // Mettre à jour l'abonnement (pour tests paiements)
-  const updateSubscription = async (subscriptionType) => {
+  // Fonction de déconnexion
+  const logout = () => {
+    setUser(null);
+    setIsAuthenticated(false);
+    localStorage.removeItem("anglais_user");
+  };
+
+  // Fonction pour mettre à jour les préférences de langue
+  const updateLanguagePreference = (language) => {
+    const newPreferences = {
+      ...userPreferences,
+      learningLanguage: language,
+    };
+    setUserPreferences(newPreferences);
+    localStorage.setItem("anglais_preferences", JSON.stringify(newPreferences));
+    console.log("🌍 Langue d'apprentissage changée:", language);
+  };
+
+  // Fonction pour mettre à jour le profil utilisateur
+  const updateUserProfile = async (profileData) => {
     try {
+      if (!user) return { success: false, error: "Utilisateur non connecté" };
+
       const updatedUser = {
         ...user,
-        subscription_type: subscriptionType,
-        subscription_updated: new Date().toISOString(),
+        ...profileData,
       };
+
       setUser(updatedUser);
+      localStorage.setItem("anglais_user", JSON.stringify(updatedUser));
 
-      console.log(`💰 Abonnement mis à jour: ${subscriptionType}`);
-      return { success: true, user: updatedUser };
+      // Mettre à jour aussi dans les utilisateurs enregistrés si ce n'est pas un compte démo
+      if (!demoAccounts[user.email]) {
+        const registeredUsers = JSON.parse(
+          localStorage.getItem("anglais_registered_users") || "{}"
+        );
+        if (registeredUsers[user.email]) {
+          registeredUsers[user.email] = {
+            ...registeredUsers[user.email],
+            ...profileData,
+          };
+          localStorage.setItem(
+            "anglais_registered_users",
+            JSON.stringify(registeredUsers)
+          );
+        }
+      }
+
+      return { success: true };
     } catch (error) {
-      return { success: false, error: "Erreur mise à jour abonnement" };
-    }
-  };
-
-  // Déconnexion
-  const logout = () => {
-    localStorage.removeItem("anglaisCongo_token");
-    setUser(null);
-    console.log("👋 Utilisateur déconnecté");
-  };
-
-  // Mettre à jour le profil (simulé)
-  const updateProfile = async (updates) => {
-    try {
-      const updatedUser = { ...user, ...updates };
-      setUser(updatedUser);
-      return { success: true, user: updatedUser };
-    } catch (error) {
+      console.error("Erreur lors de la mise à jour du profil:", error);
       return { success: false, error: "Erreur de mise à jour" };
     }
   };
 
-  // Valeur du contexte
-  const value = {
-    // État authentification
+  // Fonction pour obtenir les statistiques utilisateur
+  const getUserStats = () => {
+    if (!user) return null;
+
+    // Statistiques fictives pour la démonstration
+    return {
+      lessonsCompleted: Math.floor(Math.random() * 50) + 10,
+      exercisesCompleted: Math.floor(Math.random() * 100) + 25,
+      streakDays: Math.floor(Math.random() * 30) + 1,
+      totalPoints: Math.floor(Math.random() * 1000) + 100,
+    };
+  };
+
+  // Fonction pour vérifier l'accès Premium
+  const canAccessLingala = user?.isPremium || false;
+
+  // Valeurs du contexte
+  const contextValue = {
     user,
-    loading,
-
-    // Préférences utilisateur
+    isAuthenticated,
     userPreferences,
-    updateLanguagePreference,
-
-    // Accès et permissions
-    canAccessLingala: canAccessLingala(),
-    hasPremiumAccess: hasPremiumAccess(),
-    isAuthenticated: !!user,
-    userType: user?.subscription_type || "gratuit",
-
-    // Actions
     login,
     register,
     logout,
-    updateProfile,
-    updateSubscription,
+    updateLanguagePreference,
+    updateUserProfile,
+    getUserStats,
+    canAccessLingala,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  );
 };
 
-export default AuthContext;
+export default AuthProvider;
